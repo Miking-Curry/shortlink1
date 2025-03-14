@@ -25,7 +25,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper,GroupDO> implement
             gid = RandomGenerator.generateRandom();
         } while (!hasGid(gid));
         GroupDO groupDO = GroupDO.builder()
-                .gid(RandomGenerator.generateRandom())
+                .gid(gid)
+                .sortOrder(0)
                 .name(groupName)
                 .build();
         baseMapper.insert(groupDO);
