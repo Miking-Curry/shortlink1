@@ -46,4 +46,13 @@ public class GroupController {
         return  Results.success();
     }
 
+    /**
+     *删除短链接分组
+     */
+    @DeleteMapping("/api/shortlink/v1/group")
+    public Result<Void> delectGroup(@RequestParam String gid){
+        groupService.delectGroup(gid);
+        return  Results.success();
+    }
+
 }
