@@ -79,7 +79,7 @@ public class UserController {
      * @param requestParam
      * @return
      */
-    @PostMapping("/api/shortlink/v1/user/login")
+    @PostMapping("/api/shortlink/admin/v1/user/login")
     public Result<UserLoginRespDTO> login(@RequestBody UserUpdateReqDTO requestParam){
 
         return Results.success(userService.login(requestParam));
@@ -90,13 +90,13 @@ public class UserController {
      * @param token
      * @return
      */
-    @GetMapping("/api/shortlink/v1/user/check-login")
+    @GetMapping("/api/shortlink/admin/v1/user/check-login")
     public Result<Boolean> checkLogin(@RequestParam("username") String username,@RequestParam("token") String token){
 
         return Results.success( userService.checkLogin(username,token));
     }
 
-    @DeleteMapping("/api/shortlink/v1/user/logout")
+    @DeleteMapping("/api/shortlink/admin/v1/user/logout")
     public Result<Void> logout(@RequestParam("username") String username,@RequestParam("token") String token){
         userService.logout(username,token);
         return Results.success();
