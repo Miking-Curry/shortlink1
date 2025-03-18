@@ -40,8 +40,10 @@ public class ShortLinkController {
 
     /**
      * 修改短链接
+     *
      */
-    @PutMapping("/api/shortlink/admin/v1/update")
+
+    @PostMapping("/api/shortlink/admin/v1/update")
     public com.nageoffer.shortlink.project.common.convention.result.Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam){
         shortLinkRemoteService.updateShortLink(requestParam);
         return Results.success();
