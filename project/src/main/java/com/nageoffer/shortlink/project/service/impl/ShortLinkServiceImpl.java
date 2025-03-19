@@ -41,9 +41,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
-import static com.nageoffer.shortlink.project.common.constant.RedisKeyConstant.GOTO_LINK_KEY;
-import static com.nageoffer.shortlink.project.common.constant.RedisKeyConstant.LOCK_GOTO_LINK_KEY;
+import static com.nageoffer.shortlink.project.common.constant.RedisKeyConstant.*;
 
 /**
  * 短链接接口实现层
@@ -183,40 +183,81 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     public void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) {
         String serverName = request.getServerName();
         String fullShortUrl = serverName + "/" + shortUri;
-        String originalLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_LINK_KEY, fullShortUrl));
-        if(StrUtil.isNotBlank(originalLink)){
-            ((HttpServletResponse)response).sendRedirect(originalLink);
+
+        // 【关键1：Redis获取数据增加日志】
+        try {
+            String originalLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_LINK_KEY, fullShortUrl));
+            if (StrUtil.isNotBlank(originalLink)) {
+                ((HttpServletResponse) response).sendRedirect(originalLink);
+                return;
+            }
+        } catch (Exception e) {
+            log.error("第一次 Redis 获取 originalLink 异常，fullShortUrl: {}", fullShortUrl, e);
+            throw e; // 保留异常抛出，让 @SneakyThrows 处理
+        }
+
+        boolean contains = shortUriCachePenetrationBloomFilter.contains(fullShortUrl);
+        if (!contains) {
+            ((HttpServletResponse) response).sendRedirect("/page/notfound");
             return;
         }
-            RLock lock = redissonClient.getLock(String.format(LOCK_GOTO_LINK_KEY, fullShortUrl));
-            lock.lock();
+
+        // 【关键2：Redis获取空值键增加日志】
+        try {
+            String gotoIsNullShortLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_IS_NULL_LINK_KEY, fullShortUrl));
+            if (StrUtil.isNotBlank(gotoIsNullShortLink)) {
+                ((HttpServletResponse) response).sendRedirect("/page/notfound");
+                return;
+            }
+        } catch (Exception e) {
+            log.error("Redis 获取 gotoIsNullShortLink 异常，fullShortUrl: {}", fullShortUrl, e);
+            throw e;
+        }
+
+        RLock lock = redissonClient.getLock(String.format(LOCK_GOTO_LINK_KEY, fullShortUrl));
+        lock.lock();
+        try {
+            // 【关键3：锁内Redis操作增加日志】
             try {
-                originalLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_LINK_KEY, fullShortUrl));
-                if(StrUtil.isNotBlank(originalLink)){
-                    ((HttpServletResponse)response).sendRedirect(originalLink);
+                String originalLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_LINK_KEY, fullShortUrl));
+                if (StrUtil.isNotBlank(originalLink)) {
+                    ((HttpServletResponse) response).sendRedirect(originalLink);
                     return;
                 }
-                LambdaQueryWrapper<ShortLinkGotoDO> linkGotoQueryWrapper = Wrappers.lambdaQuery(ShortLinkGotoDO.class)
-                        .eq(ShortLinkGotoDO::getFullShortUrl, fullShortUrl);
+            } catch (Exception e) {
+                log.error("锁内 Redis 获取 originalLink 异常，fullShortUrl: {}", fullShortUrl, e);
+                throw e;
+            }
+
+            LambdaQueryWrapper<ShortLinkGotoDO> linkGotoQueryWrapper = Wrappers.lambdaQuery(ShortLinkGotoDO.class)
+                    .eq(ShortLinkGotoDO::getFullShortUrl, fullShortUrl);
+            // 【关键4：数据库查询增加日志】
+            try {
                 ShortLinkGotoDO shortLinkGotoDO = shortLinkGotoMapper.selectOne(linkGotoQueryWrapper);
-                if(shortLinkGotoDO == null){
-                    //严谨来说，此处需要进行封控
+                if (shortLinkGotoDO == null) {
+                    stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_LINK_KEY, fullShortUrl), "-", 30, TimeUnit.MINUTES);
                     return;
                 }
+
                 LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
                         .eq(ShortLinkDO::getGid, shortLinkGotoDO.getGid())
-                        .eq(ShortLinkDO::getFullShortUrl,fullShortUrl)
+                        .eq(ShortLinkDO::getFullShortUrl, fullShortUrl)
                         .eq(ShortLinkDO::getDelFlag, 0)
                         .eq(ShortLinkDO::getEnableStatus, 0);
+                // 【关键5：数据库查询增加日志】
                 ShortLinkDO shortLinkDO = baseMapper.selectOne(queryWrapper);
-                if(shortLinkDO != null){
-                    stringRedisTemplate.opsForValue().set(String.format(LOCK_GOTO_LINK_KEY,fullShortUrl),shortLinkDO.getOriginUrl());
+                if (shortLinkDO != null) {
+                    stringRedisTemplate.opsForValue().set(String.format(GOTO_LINK_KEY, fullShortUrl), shortLinkDO.getOriginUrl());
                     ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
                 }
-            }finally {
-                lock.unlock();
+            } catch (Exception e) {
+                log.error("数据库查询异常，fullShortUrl: {}", fullShortUrl, e);
+                throw e;
             }
+        } finally {
+            lock.unlock();
         }
+    }
 
 
 
