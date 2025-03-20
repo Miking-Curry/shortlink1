@@ -56,8 +56,6 @@ public class ShortLinkController {
      */
     @GetMapping("/api/shortlink/admin/v1/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
-        ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService(){
-        };
         return shortLinkRemoteService.pageShortLink(requestParam);
     }
 
