@@ -261,9 +261,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .eq(ShortLinkDO::getEnableStatus, 0);
                 // 【关键5：数据库查询增加日志】
                 ShortLinkDO shortLinkDO = baseMapper.selectOne(queryWrapper);
-                if (shortLinkDO != null) {
-                    if (shortLinkDO.getValidDate() != null && shortLinkDO.getValidDate().before(new Date())){
+                if (shortLinkDO == null || shortLinkDO.getValidDate().before(new Date())) {
                         stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_LINK_KEY,fullShortUrl), "-",30, TimeUnit.MINUTES);
+                        ((HttpServletResponse) response).sendRedirect("/page/notfound");
                         return;
                     }
                      stringRedisTemplate.opsForValue().set(
@@ -272,7 +272,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                             LinkUtil.getLinkCacheValidTime(shortLinkDO.getValidDate()), TimeUnit.MILLISECONDS
                     );
                     ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
-                }
+
             } catch (Exception e) {
                 log.error("数据库查询异常，fullShortUrl: {}", fullShortUrl, e);
                 throw e;
