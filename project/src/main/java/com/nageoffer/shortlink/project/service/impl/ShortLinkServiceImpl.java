@@ -39,6 +39,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -101,7 +102,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         }
         //缓存预热
         stringRedisTemplate.opsForValue().set(
-                fullShortUrl,
+                String.format(GOTO_LINK_KEY,fullShortUrl),
                 requestParam.getOriginUrl(),
                 LinkUtil.getLinkCacheValidTime(requestParam.getValidDate()), TimeUnit.MILLISECONDS
         );
@@ -254,7 +255,15 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 // 【关键5：数据库查询增加日志】
                 ShortLinkDO shortLinkDO = baseMapper.selectOne(queryWrapper);
                 if (shortLinkDO != null) {
-                    stringRedisTemplate.opsForValue().set(String.format(GOTO_LINK_KEY, fullShortUrl), shortLinkDO.getOriginUrl());
+                    if (shortLinkDO.getValidDate() != null && shortLinkDO.getValidDate().before(new Date())){
+                        stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_LINK_KEY,fullShortUrl), "-",30, TimeUnit.MINUTES);
+                        return;
+                    }
+                     stringRedisTemplate.opsForValue().set(
+                            String.format(GOTO_LINK_KEY,fullShortUrl),
+                            shortLinkDO.getOriginUrl(),
+                            LinkUtil.getLinkCacheValidTime(shortLinkDO.getValidDate()), TimeUnit.MILLISECONDS
+                    );
                     ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
                 }
             } catch (Exception e) {
