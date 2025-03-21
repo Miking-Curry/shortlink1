@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.nageoffer.shortlink.admin.common.convention.result.Result;
 import com.nageoffer.shortlink.admin.common.convention.result.Results;
 import com.nageoffer.shortlink.admin.remote.ShortLinkRemoteService;
-import com.nageoffer.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
+import com.nageoffer.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
+import com.nageoffer.shortlink.admin.service.RecycleBinService;
 import com.nageoffer.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-;
+
 
 /**
  * 回收站控制层
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class RecycleBinController {
+
+    private final RecycleBinService recycleBinService;
 
     /**
      * 后续重构为SpringCloud Feign 调用
@@ -30,10 +33,8 @@ public class RecycleBinController {
 
     /**
      * 保存回收站
-     * @param requestParam
-     * @return
      */
-    @PostMapping("/api/shortlink/v1/recycle-bin/save")
+    @PostMapping("/api/shortlink/admin/v1/recycle-bin/save")
     public Result<Void> saveRecycleBin(@RequestBody RecycleBinSaveReqDTO requestParam){
         shortLinkRemoteService.saveRecycleBin(requestParam);
         return Results.success();
@@ -41,12 +42,10 @@ public class RecycleBinController {
 
     /**
      * 分页查询回收站短链接
-     * @param requestParam
-     * @return
      */
-    @GetMapping("/api/shortlink/v1/recycle-bin/page")
-    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
-        return shortLinkRemoteService.pageRecycleBinShortLink(requestParam);
+    @GetMapping("/api/shortlink/admin/v1/recycle-bin/page")
+    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam){
+        return recycleBinService.pageRecycleBinShortLink(requestParam);
     }
 
 }
