@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.nageoffer.shortlink.admin.common.convention.result.Result;
 import com.nageoffer.shortlink.admin.common.convention.result.Results;
 import com.nageoffer.shortlink.admin.remote.ShortLinkRemoteService;
+import com.nageoffer.shortlink.admin.remote.dto.req.RecycleBinRecoverReqDTO;
+import com.nageoffer.shortlink.admin.remote.dto.req.RecycleBinSaveReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
 import com.nageoffer.shortlink.admin.service.RecycleBinService;
-import com.nageoffer.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,5 +48,15 @@ public class RecycleBinController {
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam){
         return recycleBinService.pageRecycleBinShortLink(requestParam);
     }
+
+    /**
+     * 恢复短链接
+     */
+    @PostMapping("/api/shortlink/admin/v1/recycle-bin/recover")
+    public com.nageoffer.shortlink.project.common.convention.result.Result<Void> recoverRecycleBin(@RequestBody RecycleBinRecoverReqDTO requestParam){
+        shortLinkRemoteService.recoverRecycleBin(requestParam);
+        return com.nageoffer.shortlink.project.common.convention.result.Results.success();
+    }
+
 
 }

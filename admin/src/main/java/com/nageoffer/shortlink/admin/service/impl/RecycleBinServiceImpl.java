@@ -9,6 +9,7 @@ import com.nageoffer.shortlink.admin.common.convention.result.Result;
 import com.nageoffer.shortlink.admin.dao.entity.GroupDO;
 import com.nageoffer.shortlink.admin.dao.mapper.GroupMapper;
 import com.nageoffer.shortlink.admin.remote.ShortLinkRemoteService;
+import com.nageoffer.shortlink.admin.remote.dto.req.RecycleBinRecoverReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
 import com.nageoffer.shortlink.admin.service.RecycleBinService;
@@ -33,6 +34,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {
     };
 
+
     @Override
     public Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam) {
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
@@ -44,6 +46,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
         }
         requestParam.setGidList(groupDOList.stream().map(GroupDO::getGid).toList());
         return shortLinkRemoteService.pageRecycleBinShortLink(requestParam);
+    }
+
+    @Override
+    public void recoverRecycleBin(RecycleBinRecoverReqDTO requestParam) {
+
     }
 
 }

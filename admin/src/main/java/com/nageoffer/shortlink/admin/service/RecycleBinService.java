@@ -2,6 +2,7 @@ package com.nageoffer.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.nageoffer.shortlink.admin.common.convention.result.Result;
+import com.nageoffer.shortlink.admin.remote.dto.req.RecycleBinRecoverReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
 
@@ -10,6 +11,7 @@ import com.nageoffer.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
  */
 public interface RecycleBinService {
 
+
     /**
      * 分页查询回收站
      * @param requestParam 请求参数
@@ -17,5 +19,10 @@ public interface RecycleBinService {
      */
     Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam);
 
+    /**
+     * 恢复短链接
+     * @param requestParam
+     */
+    void recoverRecycleBin(RecycleBinRecoverReqDTO requestParam);
 }
 
