@@ -84,30 +84,27 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
      */
     @Select("<script> " +
             "SELECT " +
-            "    tlal.user, " +
+            "    user, " +
             "    CASE " +
-            "        WHEN MIN(tlal.create_time) BETWEEN #{startDate} AND #{endDate} THEN '新访客' " +
+            "        WHEN MIN(create_time) BETWEEN '2023-11-14' AND '2023-11-16' THEN '新访客' " +
             "        ELSE '老访客' " +
             "    END AS uvType " +
             "FROM " +
-            "    t_link tl INNER JOIN " +
-            "    t_link_access_logs tlal ON tl.full_short_url = tlal.full_short_url " +
+            "    t_link_access_logs " +
             "WHERE " +
-            "    tlal.full_short_url = #{fullShortUrl} " +
-            "    AND tl.gid = #{gid} " +
-            "    AND tl.del_flag = '0' " +
-            "    AND tl.enable_status = #{enableStatus} " +
-            "    AND tlal.user IN " +
+            "    full_short_url = #{fullShortUrl} " +
+            "    AND gid = #{gid}  " +
+            "    AND user IN " +
             "    <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'> " +
             "        #{item} " +
             "    </foreach> " +
             "GROUP BY " +
-            "    tlal.user;" +
-            "</script>")
+            "    user;" +
+            "    </script>"
+    )
     List<Map<String, Object>> selectUvTypeByUsers(
             @Param("gid") String gid,
             @Param("fullShortUrl") String fullShortUrl,
-            @Param("enableStatus") Integer enableStatus,
             @Param("startDate") String startDate,
             @Param("endDate") String endDate,
             @Param("userAccessLogsList") List<String> userAccessLogsList
