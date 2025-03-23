@@ -1,0 +1,31 @@
+package com.nageoffer.shortlink.admin.controller;
+
+
+import com.nageoffer.shortlink.admin.common.convention.result.Result;
+import com.nageoffer.shortlink.admin.remote.ShortLinkRemoteService;
+import com.nageoffer.shortlink.project.dto.req.ShortLinkStatsReqDTO;
+import com.nageoffer.shortlink.project.dto.resp.ShortLinkStatsRespDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 短链接后管监控控制层
+ */
+@RestController
+@RequiredArgsConstructor
+public class ShortLinkStatsController {
+
+    /**
+     * 后续重构为SpringCloud Feign 调用
+     */
+    ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService(){
+    };
+    /**
+     * 访问单个短链接指定时间内监控数据
+     */
+    @GetMapping("/api/shortlink/admin/v1/stats")
+    public Result<ShortLinkStatsRespDTO> shortLinkStats(ShortLinkStatsReqDTO requestParam) {
+        return  shortLinkRemoteService.oneShortLinkStats(requestParam);
+    }
+}
