@@ -112,25 +112,23 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
      */
     @Select("<script> " +
             "SELECT " +
-            "    tlal.user, " +
+            "    user, " +
             "    CASE " +
-            "        WHEN MIN(tlal.create_time) BETWEEN #{startDate} AND #{endDate} THEN '新访客' " +
-            "        ELSE '老访客' " +
+            "        WHEN COUNT(*) > 1 THEN '旧访客' " +
+            "        ELSE '新访客' " +
             "    END AS uvType " +
             "FROM " +
-            "    t_link tl INNER JOIN " +
-            "    t_link_access_logs tlal ON tl.full_short_url = tlal.full_short_url " +
+            "    t_link_access_logs " +
             "WHERE " +
-            "    tl.gid = #{gid} " +
-            "    AND tl.del_flag = '0' " +
-            "    AND tl.enable_status = '0' " +
-            "    AND tlal.user IN " +
+            "    gid = #{gid} " +
+            "    AND user IN " +
             "    <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'> " +
             "        #{item} " +
             "    </foreach> " +
             "GROUP BY " +
-            "    tlal.user;" +
-            "</script>")
+            "    user;" +
+            "</script>"
+    )
     List<Map<String, Object>> selectGroupUvTypeByUsers(
             @Param("gid") String gid,
             @Param("startDate") String startDate,
@@ -160,19 +158,19 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
      * 根据短链接获取指定日期内PV、UV、UIP数据
      */
 
-//    @Select("SELECT " +
-//            "    date, " +
-//            "    SUM(pv) AS pv, " +
-//            "    SUM(uv) AS uv, " +
-//            "    SUM(uip) AS uip " +
-//            "FROM " +
-//            "    t_link_access_stats " +
-//            "WHERE " +
-//            "    gid = #{param.gid} " +
-//            "    AND date BETWEEN #{param.startDate} and #{param.endDate} " +
-//            "GROUP BY " +
-//            "     gid, date;")
-//    LinkAccessStatsDO  linkStatsByGroup(@Param("param") ShortLinkStatsReqDTO requestParam);
+    @Select("SELECT " +
+            "    date, " +
+            "    SUM(pv) AS pv, " +
+            "    SUM(uv) AS uv, " +
+            "    SUM(uip) AS uip " +
+            "FROM " +
+            "    t_link_access_stats " +
+            "WHERE " +
+            "    gid = #{param.gid} " +
+            "    AND date BETWEEN #{param.startDate} and #{param.endDate} " +
+            "GROUP BY " +
+            "     gid, date;")
+    LinkAccessStatsDO  linkStatsByGroup(@Param("param") ShortLinkStatsReqDTO requestParam);
 
 
     /**

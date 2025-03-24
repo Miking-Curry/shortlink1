@@ -1,11 +1,10 @@
-package com.nageoffer.shortlink.project.dto.req;
+package com.nageoffer.shortlink.admin.remote.dto.req;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.nageoffer.shortlink.project.dao.entity.LinkAccessLogsDO;
 import lombok.Data;
 
 @Data
-public class ShortLinkGroupStatsAccessRecordReqDTO extends Page<LinkAccessLogsDO> {
+public class ShortLinkGroupStatsAccessRecordReqDTO extends Page {
 
     /**
      * 分组标识

@@ -95,15 +95,18 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
 
+    @Value("${short-link.domain.default}")
+    private String createShortLinkDefaultDomain;
+
     @Override
     public ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam) {
         String shortLinkSuffix = generateSuffix(requestParam);
-        String fullShortUrl = StrBuilder.create(requestParam.getDomain())
+        String fullShortUrl = StrBuilder.create(createShortLinkDefaultDomain)
                 .append("/")
                 .append(shortLinkSuffix)
                 .toString();
         ShortLinkDO shortLinkDO = ShortLinkDO.builder()
-                .domain(requestParam.getDomain())
+                .domain(createShortLinkDefaultDomain)
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid())
                 .creatType(requestParam.getCreatType())
@@ -221,8 +224,10 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Override
     public void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) {
         String serverName = request.getServerName();
-        String fullShortUrl = serverName + "/" + shortUri;
-
+        String servicePort = Optional.of(request.getServerPort())
+                .filter(each -> !Objects.equals(each, 80))
+                .map(String::valueOf).map(each -> ":" + each).orElse("");
+        String fullShortUrl = serverName + servicePort + "/" + shortUri;
         // 【关键1：Redis获取数据增加日志】
         try {
             String originalLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_LINK_KEY, fullShortUrl));
