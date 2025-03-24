@@ -144,22 +144,21 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
     /**
      * 根据短链接获取指定日期内PV、UV、UIP数据
      */
+
     @Select("SELECT " +
-            "    COUNT(tlal.user) AS pv, " +
-            "    COUNT(DISTINCT tlal.user) AS uv, " +
-            "    COUNT(DISTINCT tlal.ip) AS uip " +
+            "    COUNT(user) AS pv, " +
+            "    COUNT(DISTINCT user) AS uv, " +
+            "    COUNT(DISTINCT ip) AS uip " +
             "FROM " +
-            "    t_link tl INNER JOIN " +
-            "    t_link_access_logs tlal ON tl.full_short_url = tlal.full_short_url " +
+            "    t_link_access_logs " +
             "WHERE " +
-            "    tlal.full_short_url = #{param.fullShortUrl} " +
-            "    AND tl.gid = #{param.gid} " +
-            "    AND tl.del_flag = '0' " +
-            "    AND tl.enable_status = #{param.enableStatus} " +
-            "    AND tlal.create_time BETWEEN #{param.startDate} and #{param.endDate} " +
+            "    full_short_url = #{param.fullShortUrl} " +
+            "    AND gid = #{param.gid} " +
+            "    AND create_time BETWEEN #{param.startDate} and #{param.endDate} " +
             "GROUP BY " +
-            "    tlal.full_short_url, tl.gid;")
-    LinkAccessStatsDO findPvUvUidStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
+            "    full_short_url, gid;")
+    LinkAccessStatsDO  findPvUvUipStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
+
 
     /**
      * 根据分组获取指定日期内PV、UV、UIP数据
