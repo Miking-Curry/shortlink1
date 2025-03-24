@@ -42,17 +42,16 @@ public interface LinkOsStatsMapper extends BaseMapper<LinkOsStatsDO> {
      * 根据分组获取指定日期内操作系统监控数据
      */
     @Select("SELECT " +
-            "    tlos.os, " +
-            "    SUM(tlos.cnt) AS count " +
+            "    os, " +
+            "    SUM(cnt) AS count " +
             "FROM " +
-            "    t_link tl INNER JOIN " +
-            "    t_link_os_stats tlos ON tl.full_short_url = tlos.full_short_url " +
+            "    t_link_os_stats " +
             "WHERE " +
-            "    tl.gid = #{param.gid} " +
-            "    AND tl.del_flag = '0' " +
-            "    AND tl.enable_status = '0' " +
-            "    AND tlos.date BETWEEN #{param.startDate} and #{param.endDate} " +
+            "    gid = #{param.gid} " +
+            "    AND date BETWEEN #{param.startDate} and #{param.endDate} " +
             "GROUP BY " +
-            "    tl.gid, tlos.os;")
+            "    gid, os;")
     List<HashMap<String, Object>> listOsStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
+
+
 }

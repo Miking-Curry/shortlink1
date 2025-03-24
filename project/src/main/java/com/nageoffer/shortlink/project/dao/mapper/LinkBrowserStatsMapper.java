@@ -45,17 +45,16 @@ public interface LinkBrowserStatsMapper extends BaseMapper<LinkOsStatsDO> {
      * 根据分组获取指定日期内浏览器监控数据
      */
     @Select("SELECT " +
-            "    tlbs.browser, " +
-            "    SUM(tlbs.cnt) AS count " +
+            "    browser, " +
+            "    SUM(cnt) AS count " +
             "FROM " +
-            "    t_link tl INNER JOIN " +
-            "    t_link_browser_stats tlbs ON tl.full_short_url = tlbs.full_short_url " +
+            "    t_link_browser_stats " +
             "WHERE " +
-            "    tl.gid = #{param.gid} " +
-            "    AND tl.del_flag = '0' " +
-            "    AND tl.enable_status = '0' " +
-            "    AND tlbs.date BETWEEN #{param.startDate} and #{param.endDate} " +
+            "    gid = #{param.gid} " +
+            "    AND date BETWEEN #{param.startDate} and #{param.endDate} " +
             "GROUP BY " +
-            "    tl.gid, tlbs.browser;")
+            "    gid, date, browser;")
     List<HashMap<String, Object>> listBrowserStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
+
+
 }

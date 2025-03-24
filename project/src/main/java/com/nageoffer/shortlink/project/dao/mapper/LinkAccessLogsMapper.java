@@ -42,18 +42,15 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
      * 根据分组获取指定日期内高频访问IP数据
      */
     @Select("SELECT " +
-            "    tlal.ip, " +
-            "    COUNT(tlal.ip) AS count " +
+            "    ip, " +
+            "    COUNT(ip) AS count " +
             "FROM " +
-            "    t_link tl INNER JOIN " +
-            "    t_link_access_logs tlal ON tl.full_short_url = tlal.full_short_url " +
+            "    t_link_access_logs " +
             "WHERE " +
-            "    tl.gid = #{param.gid} " +
-            "    AND tl.del_flag = '0' " +
-            "    AND tl.enable_status = '0' " +
-            "    AND tlal.create_time BETWEEN #{param.startDate} and #{param.endDate} " +
+            "    gid = #{param.gid} " +
+            "    AND create_time BETWEEN #{param.startDate} and #{param.endDate} " +
             "GROUP BY " +
-            "    tl.gid, tlal.ip " +
+            "    gid, ip " +
             "ORDER BY " +
             "    count DESC " +
             "LIMIT 5;")
@@ -159,26 +156,46 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             "    full_short_url, gid;")
     LinkAccessStatsDO  findPvUvUipStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
 
+    /**
+     * 根据短链接获取指定日期内PV、UV、UIP数据
+     */
+
+//    @Select("SELECT " +
+//            "    date, " +
+//            "    SUM(pv) AS pv, " +
+//            "    SUM(uv) AS uv, " +
+//            "    SUM(uip) AS uip " +
+//            "FROM " +
+//            "    t_link_access_stats " +
+//            "WHERE " +
+//            "    gid = #{param.gid} " +
+//            "    AND date BETWEEN #{param.startDate} and #{param.endDate} " +
+//            "GROUP BY " +
+//            "     gid, date;")
+//    LinkAccessStatsDO  linkStatsByGroup(@Param("param") ShortLinkStatsReqDTO requestParam);
+
 
     /**
      * 根据分组获取指定日期内PV、UV、UIP数据
      */
     @Select("SELECT " +
-            "    COUNT(tlal.user) AS pv, " +
-            "    COUNT(DISTINCT tlal.user) AS uv, " +
-            "    COUNT(DISTINCT tlal.ip) AS uip " +
+            "    COUNT(user) AS pv, " +
+            "    COUNT(DISTINCT user) AS uv, " +
+            "    COUNT(DISTINCT ip) AS uip " +
             "FROM " +
-            "    t_link tl INNER JOIN " +
-            "    t_link_access_logs tlal ON tl.full_short_url = tlal.full_short_url " +
+            "    t_link_access_logs " +
             "WHERE " +
-            "    tl.gid = #{param.gid} " +
-            "    AND tl.del_flag = '0' " +
-            "    AND tl.enable_status = '0' " +
-            "    AND tlal.create_time BETWEEN #{param.startDate} and #{param.endDate} " +
+            "    gid = #{param.gid} " +
+            "    AND create_time BETWEEN #{param.startDate} and #{param.endDate} " +
             "GROUP BY " +
-            "    tl.gid;")
+            "    gid;")
     LinkAccessStatsDO findPvUvUidStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
 
+    /**
+     * 根据分组进行分页查询
+     * @param requestParam
+     * @return
+     */
     @Select("SELECT " +
             "    tlal.* " +
             "FROM " +
@@ -192,4 +209,53 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             "ORDER BY " +
             "    tlal.create_time DESC")
     IPage<LinkAccessLogsDO> selectGroupPage(@Param("param") ShortLinkGroupStatsAccessRecordReqDTO requestParam);
+
+    /**
+     * 根据分组获取指定日期内基础监控数据
+     */
+    @Select("SELECT " +
+            "    date, " +
+            "    SUM(pv) AS pv, " +
+            "    SUM(uv) AS uv, " +
+            "    SUM(uip) AS uip " +
+            "FROM " +
+            "    t_link_access_stats " +
+            "WHERE " +
+            "    gid = #{param.gid} " +
+            "    AND date BETWEEN #{param.startDate} and #{param.endDate} " +
+            "GROUP BY " +
+            "    gid, date;")
+    List<LinkAccessStatsDO> listStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
+
+    /**
+     * 根据分组获取指定日期内小时基础监控数据
+     */
+    @Select("SELECT " +
+            "    hour, " +
+            "    SUM(pv) AS pv " +
+            "FROM " +
+            "    t_link_access_stats " +
+            "WHERE " +
+            "    gid = #{param.gid} " +
+            "    AND date BETWEEN #{param.startDate} and #{param.endDate} " +
+            "GROUP BY " +
+            "    gid, hour;")
+    List<LinkAccessStatsDO> listHourStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
+
+    /**
+     * 根据分组获取指定日期内小时基础监控数据
+     */
+    @Select("SELECT " +
+            "    weekday, " +
+            "    SUM(pv) AS pv " +
+            "FROM " +
+            "    t_link_access_stats " +
+            "WHERE " +
+            "    gid = #{param.gid} " +
+            "    AND date BETWEEN #{param.startDate} and #{param.endDate} " +
+            "GROUP BY " +
+            "    gid, weekday;")
+    List<LinkAccessStatsDO> listWeekdayStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
+
+
 }
