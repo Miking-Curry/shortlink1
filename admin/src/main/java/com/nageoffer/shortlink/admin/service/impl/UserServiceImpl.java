@@ -1,6 +1,7 @@
 package com.nageoffer.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -24,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -90,7 +92,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public void update(UserUpdateReqDTO requrstParam) {
         //验证当前登入用户是否为登录用户
-
         LambdaUpdateWrapper<UserDO> updateWrapper = Wrappers.lambdaUpdate(UserDO.class)
                 .eq(UserDO::getUsername,requrstParam.getUsername());
         baseMapper.update(BeanUtil.toBean(requrstParam,UserDO.class),updateWrapper);
@@ -106,11 +107,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if (userDO == null){
             throw new ClientException("用户不存在");
         }
-        Boolean hasLogin = stringRedisTemplate.hasKey("login_" + requestParam.getUsername());
-        if(hasLogin != null && hasLogin){
-            throw new ClientException("用户已登录");
+        Map<Object ,Object> hasLoginMap = stringRedisTemplate.opsForHash().entries("login_" + requestParam.getUsername());
+        if (CollUtil.isNotEmpty(hasLoginMap)) {
+            String token = hasLoginMap.keySet().stream()
+                    .findFirst()
+                    .map(Object::toString)
+                    .orElseThrow(() -> new ClientException("用户登录错误"));
+            return new UserLoginRespDTO(token);
         }
-
+        /**
+         * Hash
+         * Key：login_用户名
+         * Value：
+         *  Key：token标识
+         *  Val：JSON 字符串（用户信息）
+         */
         String uuid = UUID.randomUUID().toString();
         stringRedisTemplate.opsForHash().put("login_"+ requestParam.getUsername(),uuid, JSON.toJSONString(userDO));
         stringRedisTemplate.expire("login_" + requestParam.getUsername(),30L, TimeUnit.DAYS);
