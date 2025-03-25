@@ -2,7 +2,6 @@ package com.nageoffer.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.nageoffer.shortlink.project.dao.entity.LinkBrowserStatsDO;
-import com.nageoffer.shortlink.project.dao.entity.LinkOsStatsDO;
 import com.nageoffer.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.nageoffer.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.Insert;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * 浏览访问统计持久层
  */
-public interface LinkBrowserStatsMapper extends BaseMapper<LinkOsStatsDO> {
+public interface LinkBrowserStatsMapper extends BaseMapper<LinkBrowserStatsDO> {
 
     /**
      * 记录浏览器访问监控数据
