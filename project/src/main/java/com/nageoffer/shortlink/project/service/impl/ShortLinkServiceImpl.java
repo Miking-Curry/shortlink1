@@ -122,7 +122,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .domain(createShortLinkDefaultDomain)
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid())
-                .creatType(requestParam.getCreatType())
+                .createdType(requestParam.getCreatedType())
                 .validDateType(requestParam.getValidDateType())
                 .validDate(requestParam.getValidDate())
                 .describe(requestParam.getDescribe())
@@ -191,7 +191,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .domain(hasShortLinkDO.getDomain())
                     .shortUri(hasShortLinkDO.getShortUri())
                     .favicon(hasShortLinkDO.getFavicon())
-                    .creatType(hasShortLinkDO.getCreatType())
+                    .createdType(hasShortLinkDO.getCreatedType())
                     .gid(requestParam.getGid())
                     .originUrl(requestParam.getOriginUrl())
                     .describe(requestParam.getDescribe())
@@ -221,7 +221,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .domain(createShortLinkDefaultDomain)
                         .originUrl(requestParam.getOriginUrl())
                         .gid(requestParam.getGid())
-                        .creatType(hasShortLinkDO.getCreatType()) //数据库是creat
+                        .createdType(hasShortLinkDO.getCreatedType()) //数据库是creat
                         .validDateType(requestParam.getValidDateType())
                         .validDate(requestParam.getValidDate())
                         .describe(requestParam.getDescribe())

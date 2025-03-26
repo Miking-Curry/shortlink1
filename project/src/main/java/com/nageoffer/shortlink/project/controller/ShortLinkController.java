@@ -39,6 +39,7 @@ public class ShortLinkController {
         shortLinkService.restoreUrl(shortUri, request, response);
         return null;
     }
+
     /**
      * 创建短链接
      * @return
