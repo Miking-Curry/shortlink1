@@ -59,4 +59,8 @@ public class ShortLinkStatsRecordDTO {
      */
     private Boolean uipFirstFlag;
 
+    /**
+     * 消息队列唯一标识
+     */
+    private String keys;
 }
