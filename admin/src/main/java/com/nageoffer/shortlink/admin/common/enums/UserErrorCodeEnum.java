@@ -4,8 +4,6 @@ import com.nageoffer.shortlink.admin.common.convention.errorcode.IErrorCode;
 
 public enum UserErrorCodeEnum implements IErrorCode {
 
-    USER_TOKEN_FAIL("A000200","用户Token验证失败"),
-
     USER_NULL("B000200","用户记录不存在"),
 
     USER_USERNAME_NULL("B000201","用戶名已存在") ,
