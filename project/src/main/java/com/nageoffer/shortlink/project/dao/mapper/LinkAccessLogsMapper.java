@@ -91,13 +91,15 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             "WHERE " +
             "    full_short_url = #{fullShortUrl} " +
             "    AND gid = #{gid}  " +
-            "    AND user IN " +
-            "    <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'> " +
-            "        #{item} " +
-            "    </foreach> " +
+            "    <if test='userAccessLogsList != null and userAccessLogsList.size() > 0'>" +
+            "        AND user IN " +
+            "        <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'> " +
+            "            #{item} " +
+            "        </foreach> " +
+            "    </if>" +
             "GROUP BY " +
             "    user;" +
-            "    </script>"
+            "</script>"
     )
     List<Map<String, Object>> selectUvTypeByUsers(
             @Param("gid") String gid,
@@ -121,10 +123,12 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             "    t_link_access_logs " +
             "WHERE " +
             "    gid = #{gid} " +
-            "    AND user IN " +
-            "    <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'> " +
-            "        #{item} " +
-            "    </foreach> " +
+            "    <if test='userAccessLogsList != null and userAccessLogsList.size() > 0'>" +
+            "        AND user IN " +
+            "        <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'> " +
+            "            #{item} " +
+            "        </foreach> " +
+            "    </if>" +
             "GROUP BY " +
             "    user;" +
             "</script>"
