@@ -40,7 +40,7 @@ public class UserDO extends BaseDO {
         /**
          * 邮箱
          */
-        private String main;
+        private String mail;
 
         /**
          * 注销时间戳

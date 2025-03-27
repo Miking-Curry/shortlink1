@@ -18,7 +18,8 @@ public class UserConfiguration {
      * 用户信息传递过滤器
      */
     @Bean
-    public FilterRegistrationBean<UserTransmitFilter> globalUserTransmitFilter() {        FilterRegistrationBean<UserTransmitFilter> registration = new FilterRegistrationBean<>();
+    public FilterRegistrationBean<UserTransmitFilter> globalUserTransmitFilter() {
+        FilterRegistrationBean<UserTransmitFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new UserTransmitFilter());
         registration.addUrlPatterns("/*");
         registration.setOrder(0);

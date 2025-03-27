@@ -33,7 +33,7 @@ public class UserActualRespDTO {
     /**
      * 邮箱
      */
-    private String main;
+    private String mail;
 
 
 }
