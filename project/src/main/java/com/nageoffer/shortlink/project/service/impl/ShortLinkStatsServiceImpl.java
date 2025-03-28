@@ -48,8 +48,16 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
         LinkAccessStatsDO pvUvUipStatsByShortLink = linkAccessLogsMapper.findPvUvUipStatsByShortLink(requestParam);
         // 基础访问详情
         List<ShortLinkStatsAccessDailyRespDTO> daily = new ArrayList<>();
-        List<String> rangeDates = DateUtil.rangeToList(DateUtil.parse(requestParam.getStartDate()), DateUtil.parse(requestParam.getEndDate()), DateField.DAY_OF_MONTH).stream()
-                .map(DateUtil::formatDate)
+        // 显式指定日期格式（假设格式为 "yyyy-MM-dd HH:mm:ss"）
+        String format = "yyyy-MM-dd HH:mm:ss";
+        String startDateStr = requestParam.getStartDate().split(" ")[0] + " 00:00:00";
+        String endDateStr = requestParam.getEndDate().split(" ")[0] + " 23:59:59";
+        Date startDate = DateUtil.parse(requestParam.getStartDate(), format);
+        Date endDate = DateUtil.parse(requestParam.getEndDate(), format);
+
+        List<String> rangeDates = DateUtil.rangeToList(startDate, endDate, DateField.DAY_OF_MONTH)
+                .stream()
+                .map(date -> DateUtil.format(date, "yyyy-MM-dd"))
                 .toList();
         rangeDates.forEach(each -> listStatsByShortLink.stream()
                 .filter(item -> Objects.equals(each, DateUtil.formatDate(item.getDate())))
