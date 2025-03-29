@@ -1,7 +1,6 @@
 package com.nageoffer.shortlink.admin.remote.dto.resp;
 
 
-import com.nageoffer.shortlink.project.dto.resp.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

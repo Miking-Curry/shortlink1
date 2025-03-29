@@ -50,9 +50,9 @@ public class RecycleBinController {
      * 恢复短链接
      */
     @PostMapping("/api/short-link/admin/v1/recycle-bin/recover")
-    public com.nageoffer.shortlink.project.common.convention.result.Result<Void> recoverRecycleBin(@RequestBody RecycleBinRecoverReqDTO requestParam){
+    public Result<Void> recoverRecycleBin(@RequestBody RecycleBinRecoverReqDTO requestParam){
         shortLinkActualRemoteService.recoverRecycleBin(requestParam);
-        return com.nageoffer.shortlink.project.common.convention.result.Results.success();
+        return Results.success();
     }
 
     /**
