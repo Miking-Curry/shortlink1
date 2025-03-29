@@ -83,7 +83,7 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             "SELECT " +
             "    user, " +
             "    CASE " +
-            "        WHEN MIN(create_time) BETWEEN '2023-11-14' AND '2023-11-16' THEN '新访客' " +
+            "        WHEN MIN(create_time) BETWEEN #{startDate} AND #{endDate} THEN '新访客' " +
             "        ELSE '老访客' " +
             "    END AS uvType " +
             "FROM " +

@@ -11,6 +11,11 @@ import lombok.Data;
 public class ShortLinkStatsAccessRecordReqDTO extends Page<LinkAccessLogsDO> {
 
     /**
+     * 访客类型
+     */
+    private String uvType;
+
+    /**
      * 完整短链接
      */
     private String fullShortUrl;

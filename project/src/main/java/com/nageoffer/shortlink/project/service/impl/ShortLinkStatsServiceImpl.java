@@ -426,10 +426,9 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
                 userAccessLogsList);
         actualResult.getRecords().forEach(each -> {
             String uvType = uvTypeList.stream()
-                    .filter(item -> Objects.equals(each.getUser(),item.get("user")))
+                    .filter(item -> Objects.equals(each.getUser(), item.get("user"))) // 匹配用户
                     .findFirst()
-                    .map(item -> item.get("uvType"))
-                    .map(Object::toString)
+                    .map(item -> item.get("uvType").toString())
                     .orElse("旧访客");
             each.setUvType(uvType);
         });
