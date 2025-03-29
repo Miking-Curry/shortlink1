@@ -3,28 +3,28 @@
     <el-container>
       <el-header height="54px" style="padding: 0">
         <div class="header">
-          <div @click="toMySpace" class="logo">拿个offer-SaaS短链接@马丁</div>
+          <div @click="toMySpace" class="logo">SaaS短链接</div>
           <div style="display: flex; align-items: center">
             <a
               class="link-span"
               style="text-decoration: none"
               target="_blank"
-              href="https://nageoffer.com/shortlink/"
+              href="https://gitee.com/curry-mike/shortlink/blob/main/README.md"
               >官方文档</a
             >
             <a
               class="link-span"
               style="text-decoration: none"
               target="_blank"
-              href="https://nageoffer.com/group/"
-              >加沟通群</a
+              href="https://gitee.com/curry-mike/shortlink/blob/main/console-vue/%E5%BE%AE%E4%BF%A1.jpg"
+              >本人微信</a
             >
             <a
                 class="link-span"
                 style="text-decoration: none"
                 target="_blank"
-                href="https://nageoffer.com/shortlink/video/"
-            >🔥视频教程</a
+                href="https://gitee.com/curry-mike/shortlink"
+            >🔥项目地址</a
             >
             <a
                 class="link-span"
