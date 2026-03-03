@@ -346,11 +346,10 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @SneakyThrows
     @Override
     public void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) {
-        String serverName = request.getServerName();
-        String servicePort = Optional.of(request.getServerPort())
-                .filter(each -> !Objects.equals(each, 80))
-                .map(String::valueOf).map(each -> ":" + each).orElse("");
-        String fullShortUrl = serverName + servicePort + "/" + shortUri;
+        // 使用配置的默认域名来构造 fullShortUrl，确保与数据库中创建时的值一致
+        log.info("=== 短链接还原诊断 === createShortLinkDefaultDomain: {}, shortUri: {}", createShortLinkDefaultDomain, shortUri);
+        String fullShortUrl = createShortLinkDefaultDomain + "/" + shortUri;
+        log.info("=== 构造的 fullShortUrl: {}", fullShortUrl);
         // 【关键1：Redis获取数据增加日志】
         try {
             String originalLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_LINK_KEY, fullShortUrl));

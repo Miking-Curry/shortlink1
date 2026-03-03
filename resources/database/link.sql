@@ -1,14 +1,8 @@
-CREATE TABLE `t_group_0` (
-                             `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
-                             `gid` varchar(32) DEFAULT NULL COMMENT '分组标识',
-                             `name` varchar(64) DEFAULT NULL COMMENT '分组名称',
-                             `username` varchar(256) DEFAULT NULL COMMENT '创建分组用户名',
-                             `sort_order` int DEFAULT NULL COMMENT '分组排序',
-                             `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-                             `update_time` datetime DEFAULT NULL COMMENT '修改时间',
-                             `del_flag` tinyint(1) DEFAULT NULL COMMENT '删除标识 0：未删除 1：已删除',
-                             PRIMARY KEY (`id`),
-                             KEY `idx_username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1905177809942831106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+INSERT INTO `t_group_15` (`id`, `gid`, `name`, `username`, `sort_order`, `create_time`, `update_time`, `del_flag`)
+VALUES (1752265619253805057, 'tSUBMP', '默认分组', 'admin', 0, '2024-01-31 21:00:00', '2024-01-31 21:00:00', 0);
 
 
+INSERT INTO `t_user_15` (`id`, `username`, `password`, `real_name`, `phone`, `mail`, `deletion_time`, `create_time`,
+                         `update_time`, `del_flag`)
+VALUES (1752265616481370113, 'admin', 'admin123456', 'admin', 'yKZz0xLyjNb9LSCOCfJD4w==', '02/9oF/nWTBK0cM8UPtCOw==',
+        NULL, '2024-01-31 21:00:00', '2024-01-31 21:00:00', 0);

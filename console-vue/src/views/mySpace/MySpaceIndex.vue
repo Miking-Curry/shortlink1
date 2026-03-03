@@ -13,7 +13,7 @@
       <ul class="sortOptions">
         <li v-for="(item, index) in editableTabs" :key="item.gid">
           <div class="item-box flex-box hover-box" :class="{ selectedItem: selectedIndex === index }"
-            @click="changeSelectIndex(index)">
+               @click="changeSelectIndex(index)">
             <div style="display: flex">
               <img src="@/assets/svg/移动竖.svg" width="13" style="margin-right: 3px" alt="" />
               <span class="over-text">{{ item.name }}</span>
@@ -23,8 +23,8 @@
               <el-tooltip show-after="500" class="box-item" effect="dark" :content="'查看图表'" placement="bottom-end">
                 <!-- 传group是为了表示这个请求是查询分组图表数据 -->
                 <el-icon v-if="!(item.shortLinkCount === 0 || item.shortLinkCount === null)" class="edit"
-                  :class="{ zero: item.shortLinkCount === 0 }"
-                  @click="chartsVisible({ describe: item.name, gid: item.gid, group: true })">
+                         :class="{ zero: item.shortLinkCount === 0 }"
+                         @click="chartsVisible({ describe: item.name, gid: item.gid, group: true })">
                   <Histogram />
                 </el-icon>
               </el-tooltip>
@@ -65,7 +65,7 @@
           <div style="width: 100%; display: flex">
             <!-- <el-input style="flex: 1; margin-right: 20px" placeholder="请输入http://或https://开头的连接或引用跳转程序"></el-input> -->
             <el-button class="addButton" type="primary" style="width: 130px; margin-right: 10px"
-              @click="isAddSmallLink = true">创建短链</el-button>
+                       @click="isAddSmallLink = true">创建短链</el-button>
             <el-button style="width: 130px; margin-right: 10px" @click="isAddSmallLinks = true">批量创建</el-button>
           </div>
         </div>
@@ -76,7 +76,7 @@
         </div>
         <!-- 表格展示区域 -->
         <el-table :data="tableData" height="calc(100vh - 240px)" style="width: calc(100vw - 230px)"
-          :header-cell-style="{ background: '#f7f8fa', color: '#606266' }">
+                  :header-cell-style="{ background: '#f7f8fa', color: '#606266' }">
           <!-- 数据为空时展示的内容 -->
           <template #empty>
             <div style="height: 60vh; display: flex; align-items: center; justify-content: center">
@@ -111,7 +111,7 @@
                     <span>{{ scope.row.createTime }}</span>
                     <el-tooltip show-after="500" v-if="scope?.row?.validDate" :content="'到期时间：' + scope?.row?.validDate">
                       <img v-if="isExpire(scope?.row?.validDate)" width="18" height="18" src="@/assets/png/沙漏倒计时.png"
-                        alt="" />
+                           alt="" />
                       <div v-else><span>已失效</span></div>
                     </el-tooltip>
                   </div>
@@ -124,8 +124,8 @@
               <div class="table-url-box">
                 <!-- 当失效后就不能在点击跳转了 -->
                 <el-link type="primary" :underline="false" target="_blank"
-                  :disabled="scope?.row?.validDateType === 1 && !isExpire(scope?.row?.validDate)"
-                  :href="'http://' + scope.row.fullShortUrl">{{ scope.row.domain + '/' + scope.row.shortUri }}</el-link>
+                         :disabled="scope?.row?.validDateType === 1 && !isExpire(scope?.row?.validDate)"
+                         :href="'http://localhost:8003/' + scope.row.shortUri">{{ scope.row.domain + '/' + scope.row.shortUri }}</el-link>
                 <el-tooltip show-after="500" :content="scope.row.originUrl">
                   <span>{{ scope.row.originUrl }}</span>
                 </el-tooltip>
@@ -136,10 +136,10 @@
             <template #default="scope">
               <div style="display: flex; align-items: center">
                 <!-- 二维码 -->
-                <QRCode :url="'http://' + scope.row.fullShortUrl"></QRCode>
+                <QRCode :url="'http://localhost:8003/' + scope.row.shortUri"></QRCode>
                 <!-- 表格中的复制链接按钮 -->
                 <el-tooltip show-after="500" class="box-item" effect="dark" content="复制链接" placement="bottom-end">
-                  <el-icon @click="copyUrl('http://' + scope.row.fullShortUrl)" class="table-edit copy-url">
+                  <el-icon @click="copyUrl('http://localhost:8003/' + scope.row.shortUri)" class="table-edit copy-url">
                     <Share />
                   </el-icon>
                 </el-tooltip>
@@ -277,7 +277,7 @@
                   <!-- 回收站中的删除按钮 -->
                   <el-tooltip show-after="500" class="box-item" effect="dark" content="删除" placement="bottom-end">
                     <el-popconfirm width="300" title="删除后短链跳转会失效，同时停止数据统计，这是一个不可逆的操作，是否删除?"
-                      @confirm="removeLink(scope.row)">
+                                   @confirm="removeLink(scope.row)">
                       <template #reference>
                         <el-icon class="table-edit">
                           <Delete />
@@ -293,15 +293,15 @@
         <!-- 分页器 -->
         <div class="pagination-block">
           <el-pagination v-model:current-page="pageParams.current" v-model:page-size="pageParams.size"
-            :page-sizes="[10, 15, 20, 30]" layout="total, sizes, prev, pager, next, jumper" :total="totalNums"
-            @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                         :page-sizes="[10, 15, 20, 30]" layout="total, sizes, prev, pager, next, jumper" :total="totalNums"
+                         @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </div>
       </div>
     </div>
     <!-- 查看数据弹框 -->
     <ChartsInfo style="width: 880px" ref="chartsInfoRef" :title="chartsInfoTitle" :info="chartsInfo"
-      :tableInfo="tableInfo" :isGroup="isGroup" :nums="nums" :favicon="favicon1" :originUrl="originUrl1"
-      @changeTime="changeTime" @changePage="changePage" top="60px"></ChartsInfo>
+                :tableInfo="tableInfo" :isGroup="isGroup" :nums="nums" :favicon="favicon1" :originUrl="originUrl1"
+                @changeTime="changeTime" @changePage="changePage" top="60px"></ChartsInfo>
     <!-- 新建分组弹框 -->
     <el-dialog v-model="isAddGroup" title="新建短链接分组" style="width: 40%">
       <el-form :model="form">
@@ -345,7 +345,7 @@
             </span>
           </template>
           <CreateLink ref="createLink1Ref" :groupInfo="editableTabs" @onSubmit="addLink" @cancel="cancelAddLink"
-            :defaultGid="pageParams.gid" :is-single="true"></CreateLink>
+                      :defaultGid="pageParams.gid" :is-single="true"></CreateLink>
         </el-tab-pane>
         <el-tab-pane>
           <template #label>
@@ -360,12 +360,12 @@
     <!-- 修改短链信息弹框 -->
     <el-dialog @close="afterAddLink" v-model="isEditLink" title="编辑链接">
       <EditLink ref="editLinkRef" :editData="editData" :groupInfo="editableTabs" @onSubmit="coverEditLink"
-        @updatePage="updatePage" @cancel="coverEditLink"></EditLink>
+                @updatePage="updatePage" @cancel="coverEditLink"></EditLink>
     </el-dialog>
     <!-- 批量创建短链弹框 -->
     <el-dialog @close="afterAddLink" v-model="isAddSmallLinks" title="批量链接">
       <CreateLinks ref="createLink2Ref" :groupInfo="editableTabs" @onSubmit="addLink" @cancel="cancelAddLink"
-        :defaultGid="pageParams.gid"></CreateLinks>
+                   :defaultGid="pageParams.gid"></CreateLinks>
     </el-dialog>
   </div>
 </template>
@@ -428,7 +428,8 @@ const initStatsFormData = () => {
 }
 const visitLink = {
   fullShortUrl: '',
-  gid: ''
+  gid: '',
+  enableStatus: null
 }
 // 打开的图表是分组（true为分组）的还是单链的
 const isGroup = ref(false)
@@ -447,6 +448,7 @@ const chartsVisible = async (rowInfo, dateList) => {
   // 后续修改时间的时候拿去用
   visitLink.fullShortUrl = fullShortUrl
   visitLink.gid = gid
+  visitLink.enableStatus = enableStatus
   chartsInfoRef?.value.isVisible()
   // 如果没有时间传值，就默认查找过去一周的数据
   if (!dateList) {
@@ -471,9 +473,7 @@ const chartsVisible = async (rowInfo, dateList) => {
 }
 // 图表修改时间后重新请求数
 const changeTimeData = async (rowInfo, dateList) => {
-  const { fullShortUrl, gid } = rowInfo
-  visitLink.fullShortUrl = fullShortUrl
-  visitLink.gid = gid
+  const { fullShortUrl, gid, enableStatus } = rowInfo
   if (!dateList) {
     initStatsFormData()
   } else {
@@ -488,8 +488,8 @@ const changeTimeData = async (rowInfo, dateList) => {
     res = await API.group.queryGroupStats({ ...statsFormData, fullShortUrl, gid })
     tableRes = await API.group.queryGroupTable({ gid, ...statsFormData })
   } else {
-    res = await API.smallLinkPage.queryLinkStats({ ...statsFormData, fullShortUrl, gid })
-    tableRes = await API.smallLinkPage.queryLinkTable({ gid, fullShortUrl, ...statsFormData })
+    res = await API.smallLinkPage.queryLinkStats({ ...statsFormData, fullShortUrl, gid, enableStatus })
+    tableRes = await API.smallLinkPage.queryLinkTable({ gid, fullShortUrl, ...statsFormData, enableStatus })
   }
   tableInfo.value = tableRes
   chartsInfo.value = res?.data?.data
@@ -549,15 +549,15 @@ const initSortable = (className) => {
         if (selectedIndex.value === oldIndex) {
           selectedIndex.value = newIndex
         } else if (
-          oldIndex < newIndex &&
-          selectedIndex.value > oldIndex &&
-          selectedIndex.value <= newIndex
+            oldIndex < newIndex &&
+            selectedIndex.value > oldIndex &&
+            selectedIndex.value <= newIndex
         ) {
           selectedIndex.value = selectedIndex.value - 1
         } else if (
-          oldIndex > newIndex &&
-          selectedIndex.value < oldIndex &&
-          selectedIndex.value >= newIndex
+            oldIndex > newIndex &&
+            selectedIndex.value < oldIndex &&
+            selectedIndex.value >= newIndex
         ) {
           selectedIndex.value = selectedIndex.value + 1
         }
@@ -569,13 +569,13 @@ const initSortable = (className) => {
 }
 // 改变选中分组时触发
 watch(
-  () => selectedIndex.value,
-  (newValue) => {
-    // -1为回收站，不需要重新请求正常页面数据
-    if (newValue !== -1 && newValue !== -2) {
-      queryPage()
+    () => selectedIndex.value,
+    (newValue) => {
+      // -1为回收站，不需要重新请求正常页面数据
+      if (newValue !== -1 && newValue !== -2) {
+        queryPage()
+      }
     }
-  }
 )
 onMounted(() => {
   initSortable('sortOptions')
@@ -588,10 +588,10 @@ const pageParams = reactive({
   orderTag: null
 })
 watch(
-  () => pageParams.orderTag,
-  (nV) => {
-    queryPage()
-  }
+    () => pageParams.orderTag,
+    (nV) => {
+      queryPage()
+    }
 )
 const totalNums = ref(0)
 // 数据变化后更新当前页面
@@ -633,12 +633,12 @@ const recycleBinNums = ref(0) // 回收站中的数量
 // 获取回收站页面，gid到时候要删除
 const queryRecycleBinPage = () => {
   API.smallLinkPage
-    .queryRecycleBin({ current: pageParams.current, size: pageParams.size })
-    .then((res) => {
-      tableData.value = res.data?.data?.records
-      totalNums.value = +res.data?.data?.total
-      recycleBinNums.value = totalNums.value
-    })
+      .queryRecycleBin({ current: pageParams.current, size: pageParams.size })
+      .then((res) => {
+        tableData.value = res.data?.data?.records
+        totalNums.value = +res.data?.data?.total
+        recycleBinNums.value = totalNums.value
+      })
 }
 // 点击回收站
 const recycleBin = () => {
@@ -685,7 +685,7 @@ const deleteGroup = async (gid) => {
     ElMessage.success('删除成功')
     getGroupInfo(queryPage)
   } else {
-    ElMessage.error('删除失败')
+    ElMessage.error(res.data.message)
   }
 }
 // 编辑分组
@@ -765,42 +765,50 @@ const coverEditLink = () => {
 const toRecycleBin = (data) => {
   const { gid, fullShortUrl } = data
   API.smallLinkPage
-    .toRecycleBin({ gid, fullShortUrl })
-    .then((res) => {
-      ElMessage.success('删除成功')
-      getGroupInfo(queryPage)
-    })
-    .catch((reason) => {
-      ElMessage.error('删除失败')
-    })
+      .toRecycleBin({ gid, fullShortUrl })
+      .then((res) => {
+        if (res?.data?.code !== '0') {
+          ElMessage.error(res.data.message)
+        } else {
+          ElMessage.success('删除成功')
+          getGroupInfo(queryPage)
+        }
+      })
+      .catch((reason) => {
+        ElMessage.error('删除失败')
+      })
 }
 // 回收站中恢复
 const recoverLink = (data) => {
   const { gid, fullShortUrl } = data
   API.smallLinkPage
-    .recoverLink({ gid, fullShortUrl })
-    .then((res) => {
-      ElMessage.success('恢复成功')
-      queryRecycleBinPage()
-      // getGroupInfo(queryPage)
-      getGroupInfo()         //修复短链接恢复会报系统执行出错的问题
-    })
-    .catch((reason) => {
-      ElMessage.error('恢复失败')
-    })
+      .recoverLink({ gid, fullShortUrl })
+      .then((res) => {
+        ElMessage.success('恢复成功')
+        queryRecycleBinPage()
+        // getGroupInfo(queryPage)
+        getGroupInfo()         //修复短链接恢复会报系统执行出错的问题
+      })
+      .catch((reason) => {
+        ElMessage.error('恢复失败')
+      })
 }
 // 从回收站中删除
 const removeLink = (data) => {
   const { gid, fullShortUrl } = data
   API.smallLinkPage
-    .removeLink({ gid, fullShortUrl })
-    .then((res) => {
-      ElMessage.success('删除成功')
-      queryRecycleBinPage()
-    })
-    .catch((reason) => {
-      ElMessage.error('删除失败')
-    })
+      .removeLink({ gid, fullShortUrl })
+      .then((res) => {
+        if (res?.data?.code !== '0') {
+          ElMessage.error(res.data.message)
+        } else {
+          ElMessage.success('删除成功')
+          queryRecycleBinPage()
+        }
+      })
+      .catch((reason) => {
+        ElMessage.error('删除失败')
+      })
 }
 </script>
 
@@ -846,8 +854,8 @@ const removeLink = (data) => {
     height: 43px;
     width: 190px;
     font-family:
-      PingFangSC-Semibold,
-      PingFang SC;
+        PingFangSC-Semibold,
+        PingFang SC;
     font-weight: 520;
   }
 
